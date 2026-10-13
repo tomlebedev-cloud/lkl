@@ -1,0 +1,62 @@
+name: Update LKL data
+
+on:
+  schedule:
+    # Quick checks around game time: LKL games end between about 18:00 and 23:30 in Lithuania, so every
+    # half hour from 15:00 to 21:59 UTC. They only do a full update when a game has finished since the last
+    # one (update_data.py --if-new).
+    - cron: "13,43 15-21 * * *"
+    # Full update every morning (rosters, schedule changes), whether or not games were played.
+    - cron: "23 5 * * *"
+  workflow_dispatch: # allows running it manually from the Actions tab
+    inputs:
+      quick:
+        description: "Quick check: only update if a game has finished since the last update"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Finished box scores never change; keep them between runs so only new games are downloaded.
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: lkl-cache-${{ github.run_id }}
+          restore-keys: lkl-cache-
+
+      - name: Download data
+        run: |
+          if [ "${{ inputs.quick }}" = "true" ] || { [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" != "23 5 * * *" ]; }; then
+            python -u update_data.py --if-new
+          else
+            python -u update_data.py
+          fi
+
+      - name: Commit if anything changed
+        run: |
+          # data.js always contains a new "updated" time; only commit when the real data changed
+          if git diff --quiet -I '^const UPDATED' -- js/data.js; then
+            echo "No new data."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add js/data.js
+          git commit -m "Update LKL data ($(date -u +%Y-%m-%d))"
+          git push

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LKL Hub</title>
+  <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+  <header>
+    <div class="wrap header-inner">
+      <a class="logo" href="#home">🏀 LKL Hub</a>
+      <div class="lang"><button data-lang="en">EN</button><button data-lang="lt">LT</button></div>
+      <nav>
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#standings" data-nav="standings">Standings</a>
+        <a href="#stats" data-nav="stats">Stats</a>
+        <a href="#teams" data-nav="teams">Teams</a>
+        <a href="#schedule" data-nav="schedule">Schedule</a>
+        <a href="#predictions" data-nav="predictions">Predictions</a>
+        <a href="#bets" data-nav="bets">Betting</a>
+        <a href="#ticket" data-nav="ticket">Ticket</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+
+  <footer class="wrap">
+    <span id="footerText"></span>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/odds.js?v=1"></script>
+  <script src="js/app.js?v=1"></script>
+  <script src="js/betting.js?v=1"></script>
+  <script src="js/ticket.js?v=1"></script>
+</body>
+</html>
