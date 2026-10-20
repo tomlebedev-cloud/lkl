@@ -121,7 +121,7 @@ stored in `model.SIM`: margin ±12.8, total ±16.6 points). Ties go to overtime.
 shows fair odds, a fair handicap and total, and model chances at nearby lines.
 
 Type in a bookmaker's decimal odds (winner, handicap, total). The page removes the bookmaker margin,
-blends the model's chance with the bookmaker's ("model weight", default 50%, because the bookmaker knows
+blends the model's chance with the bookmaker's ("model weight", default 25%, because the bookmaker knows
 about injuries and news), and shows the expected value and a stake (¼ Kelly, at most 2% of the bankroll).
 Odds, settings and the bet log are saved in your browser only, separately from the other hubs';
 bet results settle automatically after the data update.
@@ -151,6 +151,11 @@ they win anyway. Treat it as a small correction, not an edge.
 
 **Pace.** Adding points to the predicted total for fast teams was tested (`python backtest.py --pace`) and
 is switched off: the effect had a different sign in different seasons.
+
+**Model weight 25% by default.** The LKL model was tuned on fewer games than the other hubs and has
+never been tested against real bookmaker odds, so the Betting, Ticket and Plan pages count the bookmaker's
+chance three times as much as the model's. Check the season's track record on the Predictions page (model
+vs. the bookmaker's favourite) after a few more weeks before giving the model more weight.
 
 The model has a real edge over a coin flip on winners and margins, but totals are weak (mean error 12.9
 points), and no test against real bookmaker odds has been done. Treat "value" as a signal to look closer,

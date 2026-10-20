@@ -22,7 +22,9 @@ function save(key, value) {
 }
 
 const betSettings = Object.assign(
-  { bankroll: 100, kelly: 0.25, maxPct: 2, minEdge: 5, modelWeight: 50 },
+  // model weight 25%: this model has not been tested against real bookmaker odds yet, so the bookmaker's
+  // chance counts three times as much until the season's track record says otherwise
+  { bankroll: 100, kelly: 0.25, maxPct: 2, minEdge: 5, modelWeight: 25 },
   load("bets.settings", {}));
 const odds = load("bets.odds", {});   // odds you typed: game code -> { ml: [h, a], hcp: [line, h, a], tot: [line, o, u] }
 // odds published with the site (js/odds.js) are used for games you haven't typed odds for
