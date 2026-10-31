@@ -8,7 +8,7 @@
 
 // Spread of real results around the model's prediction, measured by backtest.py
 // (written into MODEL by update_data.py; these defaults are only a fallback).
-const SIM = Object.assign({ sdMargin: 12.8, marginBias: 1.2, sdTotal: 16.6, totalBias: 2.0, corr: 0 }, MODEL.sim || {});
+const SIM = Object.assign({ sdMargin: 12.6, marginBias: 0.8, marginSlope: 1.26, sdTotal: 16.6, totalBias: 2.0, corr: 0 }, MODEL.sim || {});
 const SIMS = 40000;
 
 // ---------- storage (may be unavailable: private mode, blocked site data) ----------
@@ -86,7 +86,7 @@ function simulate(g) {
   const p = gamePrediction(g);
   const key = `${g.code}|${p.margin.toFixed(3)}|${p.total.toFixed(3)}`;
   if (simCache[key]) return simCache[key];
-  const mu = p.margin + SIM.marginBias, tot = p.total + SIM.totalBias;
+  const mu = SIM.marginSlope * p.margin + SIM.marginBias, tot = p.total + SIM.totalBias;
   // same random numbers for a game, so line-up changes compare cleanly
   const rand = rng(Number(g.code) * 7919 + 17);
   const margins = new Int16Array(SIMS), totals = new Int16Array(SIMS);

@@ -117,7 +117,9 @@ finished game what it predicted before tip-off.
 
 For each game of the next week the page simulates 40,000 final scores: margin and total are drawn
 around the model's prediction with the spread measured on past seasons (`python backtest.py --spread`,
-stored in `model.SIM`: margin ±12.8, total ±16.6 points). Ties go to overtime. From the simulations it
+stored in `model.SIM`: margin ±12.6, total ±16.6 points). Real margins run wider than predicted ones
+(the ratings are shrunk toward average), so the simulated margin is centred on 1.26 × the predicted
+margin; before this the betting page underrated favourites. Ties go to overtime. From the simulations it
 shows fair odds, a fair handicap and total, and model chances at nearby lines.
 
 Type in a bookmaker's decimal odds (winner, handicap, total). The page removes the bookmaker margin,

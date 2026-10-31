@@ -149,7 +149,7 @@ def tune():
 
 def spread():
     """Residuals of predicted margin and total, for model.SIM."""
-    dm, dt = [], []
+    dm, dt, pm, am = [], [], [], []
     for s in TEST_SEASONS:
         prior = model.preseason_prior(s, model.history_roster(s))
         games = SEASONS[s]
@@ -160,9 +160,17 @@ def spread():
             for g in day:
                 hp, ap, _ = r.predict(g["home"], g["away"], g["neutral"])
                 dm.append(g["hs"] - g["as"] - (hp - ap))
+                pm.append(hp - ap)
+                am.append(g["hs"] - g["as"])
                 dt.append(g["hs"] + g["as"] - (hp + ap))
     print(f"{len(dm)} games")
     print(f"  margin: bias {statistics.mean(dm):+.2f}  sd {statistics.pstdev(dm):.2f}")
+    # real margin = slope * predicted margin + bias (least squares); sd of what is left
+    mp, ma = statistics.mean(pm), statistics.mean(am)
+    slope = sum((p - mp) * (a - ma) for p, a in zip(pm, am)) / sum((p - mp) ** 2 for p in pm)
+    bias = ma - slope * mp
+    rest = statistics.pstdev([a - (slope * p + bias) for p, a in zip(pm, am)])
+    print(f"  margin with slope: slope {slope:.3f}  bias {bias:+.2f}  sd {rest:.2f}")
     print(f"  total:  bias {statistics.mean(dt):+.2f}  sd {statistics.pstdev(dt):.2f}")
     print(f"  correlation {statistics.correlation(dm, dt):.3f}")
     print(f"  total points mean abs error: model {statistics.mean(map(abs, dt)):.2f}")
